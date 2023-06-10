@@ -39,29 +39,30 @@ def get_nearest(location, data):
 def plot_path(start, end):
     latitude_start, longitude_start = start
     latitude_end, longitude_end = end
-    # Fetch the street network graph within a specified distance of the starting point
+    
+    # инициализируем граф
     G = ox.graph_from_point(start, network_type='walk')
 
-    # Find the closest nodes in the graph to the start and end points
+    # Ищем ближайшие узлы в графе к начальной и конечной точкам
     start_node = ox.distance.nearest_nodes(G, longitude_start, latitude_start)
     end_node = ox.distance.nearest_nodes(G, longitude_end, latitude_end)
 
-    # Find the shortest path using Dijkstra's algorithm
+    # Ищем самый короткий путь при помощи алгоритма Дейкстры
     shortest_path = nx.shortest_path(G, start_node, end_node, weight='time')
 
-    # Create a Folium map centered at the start point
+    # Создаем Folium map с центром в старте
     m = folium.Map(location=start, zoom_start=13)
 
-    # Add markers for start and end points
+    # Добавлением маркера на стартовую и конечную метки
     folium.Marker(location=start, icon=folium.Icon(color='green')).add_to(m)
     folium.Marker(location=end, icon=folium.Icon(color='red')).add_to(m)
 
-    # Add the shortest path to the map
+    # Отрисовка короткого пути
     path_coordinates = [(G.nodes[node]['y'], G.nodes[node]['x']) for node in shortest_path]
     folium.PolyLine(locations=path_coordinates, color='blue', weight=5).add_to(m)
-    # Adjust map zoom and center to fit the entire path
+    
+    # Масштбирование
     bounds = path_coordinates
     m.fit_bounds(bounds)
 
-    # Display the map
     return G, m

@@ -1,4 +1,12 @@
-geojson
-requests
-geopandas
 pandas
+geopandas
+streamlit
+requests
+geojson
+pandas
+osmnx
+networkx
+folium
+streamlit_folium
+matplotlib
+plotly

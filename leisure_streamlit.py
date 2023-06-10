@@ -95,9 +95,9 @@ with st.echo(code_location='below'):
     # Отношение кол-ва мест к площади округа + отображение спарсенной таблицы
     st.write("Расчет отношения кол-ва мест к площади округов.")
     if st.button('Выполнить'):
-        msc_stats_table = df_msc[["Округ", "Площадь км²"]]
-        msc_stats_table['Площадь км²'] = msc_stats_table['Площадь км²'].str.replace(',', '.')
-        msc_stats_table['Отношение'] = df.groupby(['AdmArea'])['AdmArea'].count().tolist() / msc_stats_table['Площадь км²'].astype(float)
+        msc_stats_table = df_msc[["Округ", "Площадь км²1.07.2012"]]
+        msc_stats_table['Площадь км²1.07.2012'] = msc_stats_table['Площадь км²1.07.2012'].str.replace(',', '.')
+        msc_stats_table['Отношение'] = df.groupby(['AdmArea'])['AdmArea'].count().tolist() / msc_stats_table['Площадь км²1.07.2012'].astype(float)
         st.write(msc_stats_table)
         
         fig_ratio = px.bar(msc_stats_table, x='Округ', y='Отношение', title='Отношение кол-ва мест к площади округа')
@@ -192,14 +192,15 @@ with st.echo(code_location='below'):
 
     #-----------------------------------------------------------------------------------------------------
     st.markdown("<h5 style='text-align: center;'>Три ближайших места досуга.</h5>", unsafe_allow_html=True)
-    street = st.text_input('Введите улицу', placeholder='Малая Молчановка')
-    house_number = st.text_input('Введите номер дома', placeholder='4')
     place_types = tuple(leisure.values())
     select_type = st.selectbox(
             'Выберите тип досуга',
             place_types,
             index=2
         )
+    street = st.text_input('Введите улицу', placeholder='Малая Молчановка')
+    house_number = st.text_input('Введите номер дома', placeholder='4')
+    
     df_by_type = df[df['Type'] == select_type]
     if 'start_lat' not in st.session_state and 'start_lon' not in st.session_state:
         st.session_state.start_lat = 0.0
@@ -221,8 +222,6 @@ with st.echo(code_location='below'):
         start_loc = [st.session_state.start_lat, st.session_state.start_lon]
         result = shortest_path.get_nearest(start_loc, list(places))
         st.session_state['nearest_places'] = result
-
-        st.write(st.session_state['nearest_places'])
 
     selected_place = st.selectbox('Выберите место.', options=[opt.strip() for opt in st.session_state.nearest_places]) 
 
